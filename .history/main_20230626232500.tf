@@ -15,7 +15,7 @@ resource "google_compute_network" "vpc_network" {
 resource "google_compute_subnetwork" "public_subnet" {
   name          = "public-subnet"
   ip_cidr_range = "10.0.0.0/24"
-  network       = google_compute_network.vpc_network.self_link
+  network       = google_compute_network.vpc_network.id
   region        = "us-central1"
 }
 
@@ -41,8 +41,8 @@ resource "google_compute_instance" "public_instance" {
   }
 
   network_interface {
-    network    = google_compute_network.vpc_network.id
-    subnetwork = google_compute_subnetwork.public_subnet.id
+    network    = google_compute_network.vpc_network.self_link
+    subnetwork = google_compute_subnetwork.public_subnet.self_link
   }
 
   metadata_startup_script = <<-EOF
@@ -67,8 +67,8 @@ resource "google_compute_instance" "private_instance" {
   }
 
   network_interface {
-    network    = google_compute_network.vpc_network.id
-    subnetwork = google_compute_subnetwork.private_subnet.id
+    network    = google_compute_network.vpc_network.self_link
+    subnetwork = google_compute_subnetwork.private_subnet.self_link
   }
 
   # Disable external IP forwarding for the private instance
